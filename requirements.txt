@@ -1,0 +1,48 @@
+# AI Driver Drowsiness Detection System
+# Python 3.10 or 3.11 (64-bit). Tested on Windows 11 with Python 3.11.9.
+#
+# Dependencies are added stage by stage so that a broken install in a later
+# stage can never break an earlier, already-working one.
+#
+# IMPORTANT: use opencv-contrib-python, never opencv-python alongside it.
+# MediaPipe depends on opencv-contrib-python; installing both puts two
+# different builds into the same cv2/ folder and produces a corrupted install.
+# If you already have opencv-python:  pip uninstall -y opencv-python
+
+# --- Stage 1: camera capture + live preview -------------------------------
+numpy>=2.0,<3
+opencv-contrib-python==4.11.0.86
+
+# --- Stage 2: MediaPipe Face Landmarker (Tasks API) ------------------------
+# 0.10.35 no longer ships the legacy mp.solutions.face_mesh module; the code
+# uses mediapipe.tasks.python.vision.FaceLandmarker. Model file is committed
+# at models/face_landmarker.task.
+mediapipe==0.10.35
+
+# --- Stage 7-8: eye-state CNN (training in Colab, inference locally) ------
+# Locally the CPU wheel is enough (inference + smoke tests); Colab ships its
+# own CUDA build. Install locally with:
+#   pip install "torch>=2.2" --index-url https://download.pytorch.org/whl/cpu
+torch>=2.2
+
+# --- Stage 10: laptop alerts ----------------------------------------------
+# Beeps use the standard library (winsound). Voice uses pyttsx3 (Windows SAPI5;
+# tested 2.99). Optional: without it the code falls back to Windows PowerShell
+# System.Speech (--tts powershell), slower to start but dependency-free.
+pyttsx3>=2.90
+
+# --- Stage 11: ESP32 serial link ------------------------------------------
+# USB serial to the buzzer board (hardware/drowsiness_alarm). Tested 3.5.
+pyserial>=3.5
+
+# --- Stage 12: Streamlit dashboard + logging ------------------------------
+# Dashboard only (src/app.py). The detector itself never imports these:
+# src/features.py and src/pipeline.py run without them. Session logging uses
+# the standard library sqlite3. Tested streamlit 1.63.0 / pandas 3.0.5;
+# st.fragment(run_every=...) needs streamlit >= 1.37.
+streamlit>=1.37
+pandas>=2.0
+
+# --- Stage 15: evaluation and plots ---------------------------------------
+# scikit-learn>=1.4
+# matplotlib>=3.8   (already pulled in by mediapipe)

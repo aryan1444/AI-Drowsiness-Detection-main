@@ -1,0 +1,19 @@
+"""AI Driver Drowsiness Detection System.
+
+Modules are added stage by stage:
+
+    capture.py    Stage 1  - camera abstraction + live preview   [done]
+    landmarks.py  Stage 2  - MediaPipe Face Landmarker           [done]
+    features.py   Stage 3  - EAR / MAR, Stage 4 - frame validity  [done]
+    headpose.py   Stage 4  - head pose: yaw / pitch / roll        [done]
+    eye_cnn.py    Stage 5  - eye crop preprocessing (shared with training) [done]
+                  Stage 7  - CNN, augmentation, checkpoint I/O, classifier [code done, untrained]
+    temporal.py   Stage 9  - 60 s window: PERCLOS / blinks / yawns / nods, FSM + hysteresis [done, untuned]
+    alert.py      Stage 10 - escalating laptop alerts: visual -> beep -> voice, cooldowns, dismissal, log [done]
+    hardware.py   Stage 11 - USB-serial link to the ESP32 buzzer: port discovery, heartbeat, reconnect [done]
+    pipeline.py   Stage 12 - the shared per-frame chain (Stages 2-11) + thread / process runners for UIs [done]
+    session_log.py Stage 12 - SQLite session log: sessions, events (transitions, alerts, driver, link), metrics [done]
+    app.py        Stage 12 - Streamlit dashboard on top of pipeline.PipelineProcess [done]
+"""
+
+__version__ = "0.1.0"
